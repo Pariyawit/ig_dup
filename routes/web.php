@@ -11,6 +11,10 @@
 |
 */
 
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
 Auth::routes();
 
 Route::get('/email', function(){
