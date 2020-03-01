@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use App\Post;
 
 class PostsController extends Controller
@@ -27,18 +28,24 @@ class PostsController extends Controller
     	return view('posts.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
     	$data = request()->validate([
     		'caption' => 'required',
     		'image' => ['required','image']
     	]);
 
-    	$imagePath = request('image')->store('uploads', 'public');
-        print public_path("storage/{$imagePath}");
+        // $imagePath = request('image')->store('uploads', 'public');
+        // $imagePath = request('image')->store('uploads');
+        // dd($imagePath);
 
-    	$image = Image::make(public_path("storage/{$imagePath}"))->fit(1200,1200);
-    	$image->save();
+    	$image = Image::make(request('image'))->fit(1200,1200)->encode('jpg');
+        $hash = substr(md5(microtime()),rand(0,26),40);
+        $imagePath = "public/uploads/{$hash}.jpg";
+
+        Storage::put($imagePath,$image->stream());
+
+        // dd($imagePath);
 
     	auth()->user()->posts()->create([
     		'caption' => $data['caption'],
