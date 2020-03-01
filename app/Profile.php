@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Profile extends Model
 {
@@ -10,9 +11,9 @@ class Profile extends Model
 
 	public function profileImage()
 	{
-		$imagePath = ($this->image) ? $this->image : 'profile/IEIz9NGyGZuv0I1EYcw4iAVmVkKQN1tTJRtItXCH.png';
+		$imagePath = ($this->image) ? Storage::url($this->image) : asset('image/no-profile-image.png');
 
-		return '/storage/'.$imagePath;
+		return $imagePath;
 	}
 
 	public function follower(){

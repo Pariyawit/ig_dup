@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class ProfilesController extends Controller
 {
@@ -54,9 +55,17 @@ class ProfilesController extends Controller
     	]);
 
     	if (request('image')){
-    		$imagePath = request('image')->store('profile', 'public');
-	    	$image = Image::make("storage/{$imagePath}")->fit(1000,1000);
-	    	$image->save();
+
+    		// $imagePath = request('image')->store('profile', 'public');
+	    	// $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000,1000);
+	    	// $image->save();
+
+            $image = Image::make(request('image'))->fit(1000,1000)->encode('jpg');
+            $hash = substr(md5(microtime()),rand(0,26),40);
+            $imagePath = "public/profile/{$hash}.jpg";
+            Storage::put($imagePath,$image->stream());
+
+            // dd(Storage::url($imagePath));
 
             $imageArray = ['image' => $imagePath];
     	}

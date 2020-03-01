@@ -14,7 +14,8 @@
         "laravel/framework": "5.8.*",
         "laravel/telescope": "v2.0.4",
         "laravel/tinker": "^1.0",
-        "ext-gd": "*"
+        "league/flysystem": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
